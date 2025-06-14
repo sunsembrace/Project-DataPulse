@@ -18,3 +18,44 @@ variable "lambda_role_name" {
   type        = string
   default     = "lambda_exec_datapulse_role"
 }
+
+#Step 14. Variable function
+variable "lambda_function_name" {
+  type    = string
+  default = "earthquakeFetcher"
+}
+
+#Step 21. Creating Cloudwatch EventBridge Rule variables.
+variable "lambda_schedule_rule_name" {
+  description = "Name of the CloudWatch EventBridge rule to trigger Lambda"
+  type        = string
+  default     = "datapulse_lambda_schedule_rule"
+}
+
+variable "lambda_schedule_expression" {
+  description = "Schedule expression for the EventBridge rule (e.g., rate(1 hour))"
+  type        = string
+  default     = "rate(1 hour)"
+}
+
+
+#Step 22.
+variable "lambda_permission_statement_id" {
+  description = "Statement ID for the Lambda permission resource"
+  type        = string
+  default     = "AllowExecutionFromEventBridge"
+}
+
+variable "lambda_permission_principal" {
+  description = "The AWS service principal allowed to invoke the Lambda function"
+  type        = string
+  default     = "events.amazonaws.com"
+}
+
+
+#Step 23. 
+variable "lambda_event_target_id" {
+  description = "Identifier for the EventBridge target"
+  type        = string
+  default     = "EarthquakeLambdaTarget"
+}

@@ -15,7 +15,6 @@ s3 = boto3.client ('s3')
 S3_PREFIX = 'earthquake-data/'
 
 
-
 def lambda_handler(event, context):
     S3_BUCKET = os.environ['S3_BUCKET'] #moved inside to catch missing env vars better.
     url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"

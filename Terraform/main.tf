@@ -45,3 +45,49 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
   role       = aws_iam_role.lambda_exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
+
+#step 14. (Part 2 Terraform - returned after making lambda_handler.py)
+#Lambda Function.check 
+resource "aws_lambda_function" "earthquake_fetcher" {
+  function_name = var.lambda_function_name
+  filename      = "${path.module}/../lambda/lambda_function.zip"
+  handler       = "lambda_handler.lambda_handler"
+  runtime       = "python3.9"
+  role          = aws_iam_role.lambda_exec_role.arn
+  source_code_hash = filebase64sha256("${path.module}/../lambda/lambda_function.zip")
+
+  environment {
+    variables = {
+      S3_BUCKET = var.api_bucket_name
+    }
+  }
+
+  tags = {
+    Name = "Datapulse Earthquake Fetcher"
+  }
+}
+
+#Step 21. Create Cloudwatch EventBridge.
+resource "aws_cloudwatch_event_rule" "lambda_schedule" {
+  name                = var.lambda_schedule_rule_name
+  description         = "Triggers Lambda function on schedule"
+  schedule_expression = var.lambda_schedule_expression
+}
+
+#Step 22. 
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = var.lambda_permission_statement_id
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.earthquake_fetcher.function_name
+  principal     = var.lambda_permission_principal
+  source_arn    = aws_cloudwatch_event_rule.lambda_schedule.arn #Calling on step 21 Lambda_schedule so need for block of code in variables.tf
+}
+
+
+
+#Step 23. 
+resource "aws_cloudwatch_event_target" "trigger_lambda" {
+  rule      = aws_cloudwatch_event_rule.lambda_schedule.name
+  target_id = var.lambda_event_target_id
+  arn       = aws_lambda_function.earthquake_fetcher.arn
+}
