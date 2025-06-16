@@ -106,13 +106,56 @@ resource "aws_athena_database" "datapulse_eq_database" {
   bucket = var.athena_results_datapulse_eq_bucket
 }
 
-#Step 28. Creating Glue Crawler. 
-resource "aws_glue_crawler" "dp_eq_crawler" {
-  database_name = aws_glue_catalog_database.var.athena_datapulse_eq_database
-  name          = "example"
-  role          = aws_iam_role.example.arn
+#Step 28. Create Glue Catalog Database. #Had to set up bc this is what Athena queries not the raw S3 files.  
+resource "aws_glue_catalog_database" "datapulse_eq_glue_database" {
+  name = var.glue_database_name
+} 
 
-  dynamodb_target {
-    path = "table-name"
+#Step 29. Making IAM role for Glue Crawler.  #Can we modularise?
+resource "aws_iam_role" "datapulse_glue_crawler_role" {
+  name = var.datapulse_glue_crawler_role
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "glue.amazonaws.com"
+        }
+      },
+    ]
+  })
+  } 
+
+
+#Step 30. Attach permissions to GlueCrawler Role. 
+resource "aws_iam_role_policy_attachment" "glue_crawler_policy_attach" {
+  role       = aws_iam_role.datapulse_glue_crawler_role
+  policy_arn = aws_iam_policy.datapulse_glue_crawler_policy_arn
+} 
+
+#Step 31. Create Glue Crawler. 
+resource "aws_glue_crawler" "datapulse_eq_crawler" {
+  name          = var.datapulse_glue_crawler_name
+  role          = aws_iam_role.datapulse_glue_crawler_role.arn
+  database_name = var.datapulse_glue_crawler_database_name
+  description   = var.datapulse_glue_crawler_description
+
+  s3_target {
+    path = var.datapulse_glue_crawler_s3_target_path
   }
+
+  schedule = var.datapulse_glue_crawler_schedule
+
+  schema_change_policy {
+    delete_behavior = "LOG"
+    update_behavior = "UPDATE_IN_DATABASE"
+  }
+
+  tags = var.datapulse_glue_crawler_tags
 }

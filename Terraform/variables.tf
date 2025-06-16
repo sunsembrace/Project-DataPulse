@@ -75,3 +75,24 @@ variable "athena_datapulse_eq_database" {
   type        = string
 }
 
+#Step 28. Glue Catalog database. 
+variable "glue_database_name" {
+  description = "Name of the Glue Catalog database for structured table storage"
+  type        = string
+}
+
+#Step 29. IAM Role for Glue crawler. 
+variable "datapulse_glue_crawler_role" {
+  description = "Name of the IAM role for the Glue Crawler"
+  type        = string
+  default     = "datapulse_glue_crawler_role"
+}
+
+#step 30. Policy ARN for Glue Crawler.check 
+variable "glue_crawler_policy_arn" {
+  description = "ARN of the policy to attach to Glue Crawler role (e.g. AWS managed policies)"
+  type        = string
+  default     = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+}
+
+#Step 31. Create Glue Crawler. 
