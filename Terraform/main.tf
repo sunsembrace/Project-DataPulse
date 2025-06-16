@@ -101,14 +101,14 @@ resource "aws_cloudwatch_event_target" "trigger_lambda" {
 }
 
 #Step 27. Creating Athena Database. 
-resource "aws_athena_database" "datapulse_eq_db" {
+resource "aws_athena_database" "datapulse_eq_database" {
   name   = var.athena_datapulse_eq_database
   bucket = var.athena_results_datapulse_eq_bucket
 }
 
 #Step 28. Creating Glue Crawler. 
-resource "aws_glue_crawler" "example" {
-  database_name = aws_glue_catalog_database.example.name
+resource "aws_glue_crawler" "dp_eq_crawler" {
+  database_name = aws_glue_catalog_database.var.athena_datapulse_eq_database
   name          = "example"
   role          = aws_iam_role.example.arn
 
