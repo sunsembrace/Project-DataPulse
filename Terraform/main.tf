@@ -74,7 +74,7 @@ resource "aws_cloudwatch_event_rule" "lambda_schedule" {
   schedule_expression = var.lambda_schedule_expression
 }
 
-#Step 22. 
+#Step 22.  Add Lambda Permission for EventBridge to Invoke
 resource "aws_lambda_permission" "allow_eventbridge" {
   statement_id  = var.lambda_permission_statement_id
   action        = "lambda:InvokeFunction"
@@ -83,11 +83,26 @@ resource "aws_lambda_permission" "allow_eventbridge" {
   source_arn    = aws_cloudwatch_event_rule.lambda_schedule.arn #Calling on step 21 Lambda_schedule so need for block of code in variables.tf
 }
 
-
-
-#Step 23. 
+#Step 23. Deploy and verify scheduled Lambda triggers.
 resource "aws_cloudwatch_event_target" "trigger_lambda" {
   rule      = aws_cloudwatch_event_rule.lambda_schedule.name
   target_id = var.lambda_event_target_id
   arn       = aws_lambda_function.earthquake_fetcher.arn
 }
+
+#Phase 2 - Athena.
+#Step 26. Create S3 bucket for Athena to store queried results into.
+ resource "aws_s3_bucket" "athena_results" {
+  bucket = var.athena_results_dp_eq_bucket
+
+  tags = {
+    Name        = "AthenaResults"
+  }
+}
+
+#Step 27. Creating Athena Database. 
+resource "aws_athena_database" "this" {
+  name   = var.athena_dp_eq
+  bucket = var.athena_results_dp_eq_bucket
+}
+

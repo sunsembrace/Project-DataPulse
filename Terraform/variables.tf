@@ -59,3 +59,26 @@ variable "lambda_event_target_id" {
   type        = string
   default     = "EarthquakeLambdaTarget"
 }
+
+
+#Step 26. S3 bucket name for Athena query'd results.
+variable "athena_results_dp_eq_bucket" {
+  description = "Bucket name for Athena query results"
+  type        = string
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment label (e.g., dev)" #Come back and edit this
+}
+
+#Step 27. Athena Database variables
+variable "athena_dp_eq" {
+  description = "Name of the Athena database"
+  type        = string
+}
+
+variable "athena_results_dp_eq_bucket" {
+  description = "S3 bucket for Athena query results"
+  type        = string
+}

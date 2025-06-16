@@ -1,12 +1,15 @@
-# Ignore Terraform state files
+# Terraform
+.terraform/
 terraform.tfstate
 terraform.tfstate.backup
+.terraform.lock.hcl
 
-# Ignore tfvars files (may contain secrets)
-*.tfvars
+# Lambda
+lambda/lambda_function.zip
 
-# Ignore .terraform directory with providers and cache
-.terraform/
+# Python cache
+__pycache__/
+*.pyc
 
-# Ignore crash logs
-crash.log
+# Misc
+.DS_Store
