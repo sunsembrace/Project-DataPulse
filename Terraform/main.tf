@@ -93,7 +93,7 @@ resource "aws_cloudwatch_event_target" "trigger_lambda" {
 #Phase 2 - Athena.
 #Step 26. Create S3 bucket for Athena to store queried results into.
  resource "aws_s3_bucket" "athena_results" {
-  bucket = var.athena_results_dp_eq_bucket
+  bucket = var.athena_results_datapulse_eq_bucket
 
   tags = {
     Name        = "AthenaResults"
@@ -101,8 +101,18 @@ resource "aws_cloudwatch_event_target" "trigger_lambda" {
 }
 
 #Step 27. Creating Athena Database. 
-resource "aws_athena_database" "this" {
-  name   = var.athena_dp_eq
-  bucket = var.athena_results_dp_eq_bucket
+resource "aws_athena_database" "datapulse_eq_db" {
+  name   = var.athena_datapulse_eq_database
+  bucket = var.athena_results_datapulse_eq_bucket
 }
 
+#Step 28. Creating Glue Crawler. 
+resource "aws_glue_crawler" "example" {
+  database_name = aws_glue_catalog_database.example.name
+  name          = "example"
+  role          = aws_iam_role.example.arn
+
+  dynamodb_target {
+    path = "table-name"
+  }
+}
