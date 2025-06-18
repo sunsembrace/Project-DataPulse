@@ -92,7 +92,7 @@ resource "aws_cloudwatch_event_target" "trigger_lambda" {
 
 #Phase 2 - Athena.
 #Step 26. Create S3 bucket for Athena to store queried results into.
- resource "aws_s3_bucket" "athena_results" {
+ resource "aws_s3_bucket" "athena_query_results" {
   bucket = var.athena_results_datapulse_eq_bucket
 
   tags = {
@@ -135,8 +135,8 @@ resource "aws_iam_role" "datapulse_glue_crawler_role" {
 
 #Step 30. Attach permissions to GlueCrawler Role. 
 resource "aws_iam_role_policy_attachment" "glue_crawler_policy_attach" {
-  role       = aws_iam_role.datapulse_glue_crawler_role
-  policy_arn = aws_iam_policy.datapulse_glue_crawler_policy_arn
+  role       = aws_iam_role.datapulse_glue_crawler_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole" 
 } 
 
 #Step 31. Create Glue Crawler. 

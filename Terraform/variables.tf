@@ -2,14 +2,12 @@
 variable "aws_region" {
   description = "The AWS region to deploy into"
   type        = string
-  default     = "eu-west-2" # London
 }
 
 # Step 2. S3 Bucket Name
 variable "api_bucket_name" {
   description = "The name of the S3 bucket to store API data"
   type        = string
-  default     = "datapulse-api-bucket" #Globally unique.
 }
 
 # Step 3. Lambda Role name
@@ -95,4 +93,40 @@ variable "glue_crawler_policy_arn" {
   default     = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
 }
 
-#Step 31. Create Glue Crawler. 
+#Step 31. Create Glue Crawler - loads of variables.
+
+variable "datapulse_glue_crawler_name" {
+  description = "The name of the Glue crawler"
+  type        = string
+}
+
+variable "datapulse_glue_crawler_database_name" {
+  description = "The name of the Glue database to store metadata"
+  type        = string
+}
+
+variable "datapulse_glue_crawler_s3_target_path" {
+  description = "S3 path that contains the raw JSON data to be crawled"
+  type        = string
+}
+
+variable "datapulse_glue_crawler_schedule" {
+  description = "Cron-style schedule for when the crawler should run"
+  type        = string
+  default     = "cron(0 12 * * ? *)" # Runs every day at 12:00 UTC
+}
+
+variable "datapulse_glue_crawler_description" {
+  description = "Description for the Glue crawler"
+  type        = string
+  default     = "Crawls datapulse S3 bucket for Athena-compatible schema"
+}
+
+variable "datapulse_glue_crawler_tags" {
+  description = "Tags for the Glue crawler"
+  type        = map(string)
+  default = {
+    Name        = "datapulse-glue-crawler"
+    Environment = "dev"
+  }
+}
