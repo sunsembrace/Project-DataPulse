@@ -6,3 +6,7 @@
 
 #4. As complexity has grown with phase 2 and variables with Glue Crawler - We must add terraform.tfvars which we forgot earlier LOOOOOOOOL. its ok. apart of the learning process!. 
 
+#5. Had to go back and add depends me on athena DB creation for its bucket. 
+
+#6. A bunch of fixes in path location for glue crawler and its bucket.
+

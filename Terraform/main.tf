@@ -104,7 +104,12 @@ resource "aws_cloudwatch_event_target" "trigger_lambda" {
 resource "aws_athena_database" "datapulse_eq_database" {
   name   = var.athena_datapulse_eq_database
   bucket = var.athena_results_datapulse_eq_bucket
+
+  depends_on = [
+    aws_s3_bucket.athena_query_results #Had to add this after for bug fixes due to DB creation relative to its bucket dependency. 
+  ]
 }
+
 
 #Step 28. Create Glue Catalog Database. #Had to set up bc this is what Athena queries not the raw S3 files.  
 resource "aws_glue_catalog_database" "datapulse_eq_glue_database" {
