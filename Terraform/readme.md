@@ -40,7 +40,7 @@ This solution uses Terraform for infrastructure provisioning and Python for comp
 👀 AWS CloudWatch: Logs pipeline activity and enables alerting
 
 
-4. 🚀 Getting Started
+5. 🚀 Getting Started
 Prerequisites
 AWS CLI & credentials
 
@@ -64,7 +64,7 @@ Deploy Lambda code and confirm scheduled triggers are active
 
 
 
-5. 🧪 Usage
+6. 🧪 Usage
 Once deployed, the pipeline will:
 
 Call the USGS API on schedule (via Lambda)
@@ -85,7 +85,7 @@ WHERE magnitude > 5
 ORDER BY time DESC  
 
 
-6. 🔧 Configuration
+7. 🔧 Configuration
 Ensure the following environment variables or .tfvars settings are configured:
 
 LAMBDA_API_URL=https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson  
@@ -93,7 +93,7 @@ BUCKET_NAME=your-s3-bucket-name
 SCHEDULE_EXPRESSION=rate(1 hour)  
 
 
-7. 💻 Tech Stack
+8. 💻 Tech Stack
 AWS (Lambda, S3, Glue, Athena, IAM, CloudWatch, EventBridge)
 
 Terraform
@@ -101,12 +101,12 @@ Terraform
 Python
 
 
-8. USGS API → Lambda → S3 → Glue Crawler → Glue ETL → Athena  
+9. USGS API → Lambda → S3 → Glue Crawler → Glue ETL → Athena  
             ↑            ↓        ↑  
          EventBridge   CloudWatch IAM  
 
 
-9. 🐞 Known Limitations
+10. 🐞 Known Limitations
 Visualization layer (e.g., AWS QuickSight) is planned but not yet implemented
 
 Currently uses hourly polling; real-time streaming not supported
@@ -114,7 +114,7 @@ Currently uses hourly polling; real-time streaming not supported
 Regional bias may exist in USGS data availability
 
 
-10. ✍️ Future Improvements
+11. ✍️ Future Improvements
 Add QuickSight dashboards for visual insights
 
 Integrate SNS or Slack alerts for high-magnitude events
