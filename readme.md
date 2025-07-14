@@ -101,7 +101,8 @@ Terraform
 Python
 
 
-9. USGS API → Lambda → S3 → Glue Crawler → Glue ETL → Athena  
+9. 🏗️ Architecture Flow
+USGS API → Lambda → S3 → Glue Crawler → Glue ETL → Athena  
             ↑            ↓        ↑  
          EventBridge   CloudWatch IAM  
 
