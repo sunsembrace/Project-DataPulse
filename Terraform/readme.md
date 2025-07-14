@@ -131,6 +131,8 @@ USGS Earthquake GeoJSON API
 
 AWS documentation and community guides
 
+Terraform Documentation
+
 
 14. Challenges & Solutions
 Understanding IAM Role vs Policy ARNs
