@@ -110,7 +110,6 @@ resource "aws_athena_database" "datapulse_eq_database" {
   ]
 }
 
-
 #Step 28. Create Glue Catalog Database. #Had to set up bc this is what Athena queries not the raw S3 files.  
 resource "aws_glue_catalog_database" "datapulse_eq_glue_database" {
   name = var.glue_database_name
