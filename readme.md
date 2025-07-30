@@ -141,3 +141,13 @@ Initially, I was confused why the IAM Role output only displayed a single ARN ev
 
 Managing Resource Dependencies with Athena
 During deployment, Athena queries sometimes failed because the underlying S3 bucket was not fully created beforehand. To fix this, I added an explicit depends_on attribute in Terraform to ensure the Athena database resource waits for the S3 bucket creation. This improved the reliability and order of my infrastructure provisioning.
+
+Updating Lambda_handler with indempotency to prevent overwrites.
+Added a block of code which before attempting to upload, lambda checks if the file (with generated s3 key) already exists in the bucket using head_object.
+if object already exists, function logs a warning and skips the upload returning a success response.
+if object doesn't exist (error 404), function proceeds to upload as normal.
+if any other error occurs (e.g S3 access isues), it is raised normally to avoid masking real problems. 
+
+This ensures system is indempotent.
+Provenets accidental overwriting of data in S3.
+makes the function safe to retry or run in parallel. 
