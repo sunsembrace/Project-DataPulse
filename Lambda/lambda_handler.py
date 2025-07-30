@@ -28,6 +28,19 @@ def lambda_handler(event, context):
         timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H-%M-%SZ')
         s3_key = f"{S3_PREFIX}earthquakes_{timestamp}.json"
 
+    #Checking if object already exists (indempotency by preventing overwrites. ) (Most recent update).
+        try:
+            s3.head_object(Bucket=S3_BUCKET, Key=s3_key)
+            logger.warning(f"S3 key {s3_key} already exists. Skipping write to avoid overwrite.")
+            return {
+                'statusCode': 200,
+                'body': f"Skipped: Data already exists for {timestamp}"
+            }
+        except s3.exceptions.ClientError as e:
+            if e.response['Error']['Code'] != '404':
+                raise  # Some other error (not "Not Found")
+
+
         s3.put_object(
             Bucket = S3_BUCKET,
             Key = s3_key,
