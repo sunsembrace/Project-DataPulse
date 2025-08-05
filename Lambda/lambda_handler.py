@@ -4,7 +4,7 @@ import json
 import logging
 import boto3
 import os
-from datetime import datetime
+from datetime import datetime, UTC
 
 #Logger set up.
 logger = logging.getLogger()
@@ -25,7 +25,7 @@ def lambda_handler(event, context):
 
         logger.info(f"Fetched {len(data['features'])} earthquakes")
 
-        timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H-%M-%SZ')
+        timestamp = datetime.now(UTC).strftime('%Y-%m-%dT%H-%M-%SZ')
         s3_key = f"{S3_PREFIX}earthquakes_{timestamp}.json"
 
     #Checking if object already exists (indempotency by preventing overwrites. ) (Most recent update).
